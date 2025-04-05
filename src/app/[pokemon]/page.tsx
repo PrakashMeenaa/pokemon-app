@@ -6,16 +6,17 @@ type PageProps = {
 };
 
 async function getPokemonData(pokemon: string): Promise<any> {
-  const res = await fetch(`https://pokeapi.co/api/v2/pokemon/${pokemon}`);
+  const res = await fetch(`https://pokeapi.co/api/v2/pokemon/${pokemon.toLowerCase()}`);
   if (!res.ok) {
     throw new Error("Failed to fetch Pokémon data");
   }
   return res.json();
 }
 
-export default async function PropertyDetailPage({ params }: PageProps) {
-    const pokemon = params.pokemon;
-    const data = await getPokemonData(pokemon);
+export default async function PropertyDetailPage(props: PageProps) {
+  const params = await props.params;
+  const { pokemon } = params;
+  const data = await getPokemonData(pokemon);
 
   return (
     <div className="max-w-3xl mx-auto p-4">
