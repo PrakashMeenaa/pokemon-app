@@ -1,21 +1,30 @@
 import Link from "next/link";
 import PropertyDetailCard from "@/components/PropertyDetailCard";
+import { Pokemon } from "@/types/pokemon";
 
 type PageProps = {
-  params: { pokemon: string };
+  params: Promise<{ pokemon: string }>;
 };
 
-async function getPokemonData(pokemon: string): Promise<any> {
+async function getPokemonData(pokemon: string): Promise<Pokemon> {
   const res = await fetch(`https://pokeapi.co/api/v2/pokemon/${pokemon.toLowerCase()}`);
   if (!res.ok) {
     throw new Error("Failed to fetch Pokémon data");
   }
-  return res.json();
+  const data = await res.json();
+  return {
+    name: data.name,
+    image: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${data.id}.png`,
+    sprites: data.sprites,
+    abilities: data.abilities,
+    stats: data.stats,
+    moves: data.moves,
+    types: data.types.map((t: { type: { name: string } }) => t.type.name),
+  };
 }
 
-export default async function PropertyDetailPage(props: PageProps) {
-  const params = await props.params;
-  const { pokemon } = params;
+export default async function PropertyDetailPage({ params }: PageProps) {
+  const { pokemon } = await params; // Await the params promise
   const data = await getPokemonData(pokemon);
 
   return (

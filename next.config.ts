@@ -1,8 +1,11 @@
-import type { NextConfig } from "next";
-
-const nextConfig: NextConfig = {
-  devIndicators: false
+const nextConfig = {
+  devIndicators: false,
+  experimental: {
+    appDir: true,
+  },
+  images: {
+    domains: ["raw.githubusercontent.com"],
+  },
 };
-
 
 export default nextConfig;
